@@ -2,8 +2,8 @@
 //  NetworkManager.swift
 //  GitBrowser
 //
-//  Created by Prashant Rane
-//  Copyright © 2019 prrane. All rights reserved.
+//  Created by Surya
+//  Copyright © 2019 Github. All rights reserved.
 //
 
 import UIKit
@@ -31,9 +31,12 @@ class NetworkManager {
 
 extension NetworkManager {
   
-  // FIXME: implement fetchAvatar
   func fetchAvatar(from avaratURL: URL, _ completion: @escaping ((Data?) -> Void)) {
-    completion(nil)
+    let dataTask = URLSession.shared.dataTask(with: avaratURL) { (data, response, error) in
+      completion(data)
+    }
+
+    dataTask.resume()
   }
 
 }
@@ -84,7 +87,15 @@ extension NetworkManager {
     components.queryItems = {
       var queryItems = [URLQueryItem]()
       queryItems.append(URLQueryItem(name: "q", value: "swift"))
-      return queryItems
+      queryItems.append(URLQueryItem(name: "sort", value: "stars"))
+    ///pushed:YYYY-MM-DD
+       let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateString = formatter.string(from: date)
+        queryItems.append(URLQueryItem(name: "pushed", value: dateString))
+        
+       return queryItems
     }()
 
     return components.url
@@ -96,9 +107,27 @@ extension NetworkManager {
 
 extension NetworkManager {
 
-  // FIXME: implement fetchReadmeURL
   func fetchReadmeURL(from readmeSourceURL: URL, _ completion: @escaping ((String?) -> Void)) {
-    completion(nil)
+    let dataTask = URLSession.shared.dataTask(with: readmeSourceURL) { (data, response, error) in
+      guard let jsonData = data else {
+        print("Error: Failed to get json data, error: \(String(describing: error))")
+        completion(nil)
+        return
+      }
+
+      do {
+        let readMe = try JSONDecoder().decode(ReadMe.self, from: jsonData)
+        completion(readMe.htmlURL)
+      }
+      catch let error {
+        print("Error: Failed to decode json data, error: \(String(describing: error))")
+        completion(nil)
+        return
+      }
+
+    }
+    
+    dataTask.resume()
   }
 
   func fetchReadmeData(from readmeURL: URL, _ completion: @escaping ((Data?) -> Void)) {

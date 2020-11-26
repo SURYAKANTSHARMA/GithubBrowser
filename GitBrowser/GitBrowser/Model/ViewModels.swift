@@ -2,9 +2,10 @@
 //  ViewModels.swift
 //  GitBrowser
 //
-//  Created by Prashant Rane
-//  Copyright © 2019 prrane. All rights reserved.
+//  Created by Surya
+//  Copyright © 2019 Github. All rights reserved.
 //
+
 
 import Foundation
 

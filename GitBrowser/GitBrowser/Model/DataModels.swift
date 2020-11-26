@@ -2,9 +2,10 @@
 //  DataModels.swift
 //  GitBrowser
 //
-//  Created by Prashant Rane
-//  Copyright © 2019 prrane. All rights reserved.
+//  Created by Surya
+//  Copyright © 2019 Github. All rights reserved.
 //
+
 
 import UIKit
 
@@ -14,6 +15,14 @@ struct RepositoriesList: Codable {
   enum CodingKeys: String, CodingKey {
     case repositories = "items"
   }
+}
+
+struct ReadMe: Decodable {
+    let htmlURL: String
+    
+    enum CodingKeys: String, CodingKey {
+      case htmlURL = "html_url"
+    }
 }
 
 struct Repository: Codable {
